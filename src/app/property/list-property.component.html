@@ -1,0 +1,105 @@
+<div class="container">
+    <div class="loading-shade" *ngIf="isLoadingResults||isRateLimitReached">
+        <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+        <div class="rate-limit-reached" *ngIf="isRateLimitReached">
+            Rate limit has been reached. It will be reset in one minute
+        </div>
+
+    </div>
+    <div *ngIf="err || notification">
+        <div *ngIf="err" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
+                aria-label="Warning:">
+                <path
+                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+            </svg>
+            <strong>{{err}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div *ngIf="notification" class="alert alert-success alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
+                aria-label="Warning:">
+                <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </svg>
+            <strong>{{notification}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="h2">
+                <p>Properties</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" (click)="createProperty()"
+                data-bs-target="#staticBackdrop">
+                Add New Property
+            </button>
+            <div class="d-flex flex-wrap justify-content-start">
+                <div class="card m-2" *ngFor="let item of apiResponse" style="width: 15rem;">
+                    <div class="card-header">
+                        <h3>{{item.description}}</h3>
+                    </div>
+                    <img class="card-img-top m-3 img-thumbnail imageThumbnail" style="width: auto; height: 200px;"
+                        [src]="item.filePath" alt="Fetched Photo" />
+                    <div class="card-footer text-center">
+                        <button type="button" (click)="updateProp(item.id!);" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-pencil-square"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                            <path fill-rule="evenodd"
+                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                        </svg>
+                    </button>
+                    <form method="post" class="mx-3" (ngSubmit)="deleteProp(item.id!)">
+                        <span id="confirmDeleteSpan_{{item.id}}" style="display:none">
+                            <div class="d-inline-flex">
+                                <span class="text-danger font-weight-bold">Are you sure?</span><br />
+                                <button type="submit" class="btn btn-danger mx-2">Yes</button>
+                                <a class="btn btn-primary" (click)="confirmDelete(item.id!, false)">No</a>
+                            </div>
+                        </span>
+                        <span id="deleteSpan_{{item.id}}">
+                            <a (click)="confirmDelete(item.id!, true)" class="">
+                                <svg width="16" height="16" fill="RED" class="bi bi-trash mx-3" viewBox="0 0 16 16">
+                                    <path
+                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                    <path fill-rule="evenodd"
+                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                </svg>
+                            </a>
+                        </span>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content bg-light">
+            <div class="modal-header bg-primary">
+                <p class="modal-title h3 " id="staticBackdropLabel">{{ModalTitle}}</p>
+
+                <button type="button" class="btn-close" (click)="closeClick()" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <app-add-property (notify)="notificationHandler($event)" [property]="addProperty" 
+                    *ngIf="AddPropertyComponent"></app-add-property>
+                <app-edit-property (notify)="notificationHandler($event)" [model]="editProperty" 
+                    *ngIf="EditPropertyComponent">
+                </app-edit-property>
+                <div *ngIf="err">There is a problem with the service. Please try again later.</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+<header>
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom boxshadow mb-3 px-3 py-2">
+    <a class="navbar-brand font-large" routerLink="">
+      {{title}}
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarcollapse"
+      aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" id="navbarcollapse">
+      <ul class="navbar-nav ml-auto ">
+        <li class="nav-item" *ngIf="Email">
+          <a routerLink="/login" (click)="logout()" class="nav-link m-1">Logout {{Email}}</a>
+        </li>
+
+        <li class="nav-item " *ngIf="!Email">
+          <a type="button" routerLink="/login" routerLinkActive="active"  class="nav-link m-1">Login</a>
+        </li>
+        <li class="nav-item " *ngIf="!Email">
+          <a type="button" (click)="loadDepts()" class="nav-link m-1" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop2">Register</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav flex-grow-1" *ngIf="Email">
+        <li class="nav-item ">
+          <a routerLinkActive="active" routerLink="/home" class="nav-link m-1 ">Home</a>
+        </li>
+        <li class="nav-item ">
+          <a routerLinkActive="active" routerLink="/api/property" class="nav-link m-1 ">Property</a>
+        </li>
+        
+        <li class="nav-item dropdown nav-fill m-1">
+          <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdownMenuLink"
+            data-bs-toggle="dropdown" aria-controls="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+            Manage
+          </a>
+          <div class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" routerLink="/api/company">Company</a>
+            <a class="dropdown-item" routerLink="/api/department/index">Department</a>
+            <a class="dropdown-item" routerLink="/api/employee">Employee</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<router-outlet ></router-outlet>
+
+<footer style="background-color: #333; color: #fff; padding: 20px; text-align: center;">
+  <div style="max-width: 1200px; margin: auto;">
+      <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+          <!-- About Section -->
+          <div>
+              <h3>About Us</h3>
+              <p>Learn more about our mission, team, and values.</p>
+          </div>
+          
+          <!-- Navigation Links -->
+          <div>
+              <h3>Quick Links</h3>
+              <ul style="list-style-type: none; padding: 0;">
+                  <li><a href="#" style="color: #ccc; text-decoration: none;">Home</a></li>
+                  <li><a routerLink="/api/property" style="color: #ccc; text-decoration: none;">Property</a></li>
+                  <li><a href="#" style="color: #ccc; text-decoration: none;">Contact</a></li>
+                  <li><a href="#" style="color: #ccc; text-decoration: none;">Privacy Policy</a></li>
+              </ul>
+          </div>
+
+          <!-- Contact Section -->
+          <div>
+              <h3>Contact</h3>
+              <p>Email: esk@gmail.com</p>
+              <p>Phone: +123 456 7890</p>
+          </div>
+
+          <!-- Social Media Links -->
+          <div>
+              <h3>Follow Us</h3>
+              <a href="#" style="color: #ccc; margin: 0 10px;">Facebook</a>
+              <a href="#" style="color: #ccc; margin: 0 10px;">Twitter</a>
+              <a href="#" style="color: #ccc; margin: 0 10px;">Instagram</a>
+          </div>
+      </div>
+
+      <hr style="border: 0.5px solid #555;">
+      <p style="margin: 0;">&copy; 2024 Bit Rent. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="modal fade " id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content bg-light">
+      <div class="modal-header bg-primary">
+        <p class="modal-title h3 " id="staticBackdropLabel">{{ModalTitle}}</p>
+
+        <button type="button" class="btn-close" (click)="closeClick()" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body ">
+        <app-register (notify)="notificationHandler($event)" [webAppUser]="webAppUser"
+          *ngIf="UserRegisterComponent"></app-register>
+          
+        <div *ngIf="errMsg">There is a problem with the service. Please try again later.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

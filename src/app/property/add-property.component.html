@@ -1,0 +1,65 @@
+<div class="row mx-auto bg-light">
+    <div *ngIf="notification" class="alert alert-success alert-dismissible fade show mt-sm-auto" role="alert">
+        <strong>{{notification}}</strong>
+        <button type="button" class="close " data-bs-dismiss="alert" aria-label="Close">
+            <div aria-hidden="true">&times;</div>
+        </button>
+    </div>
+    <div *ngIf="err" class="alert alert-danger alert-dismissible fade show mt-sm-auto" role="alert">
+        <strong>{{err}}</strong>
+        <button type="button" class="close mr-0" data-bs-dismiss="alert" aria-label="Close">
+            <div aria-hidden="true">&times;</div>
+        </button>
+    </div>
+
+    <form class="h6 pt-3" [formGroup]="addPropertyForm" (ngSubmit)="addProperty()">
+
+        <div class="row">
+            <mat-form-field class="col-md-5">
+                <mat-label class=" text-black">Description</mat-label>
+                <input formControlName="description" id="description" matInput class="col-md-10 text-dark"
+                    placeholder="Description" />
+                <mat-error *ngIf="Description?.invalid &&(Description?.dirty||Description?.touched)">
+                    <div *ngIf="Description?.errors?.['minlength']||Description?.errors?.['maxlength']">
+                        Description length must be at least 3 and at most 30 characters long
+                    </div>
+                    <div *ngIf="Description?.errors?.['required']">Description is required</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="col-md-5">
+                <mat-label class=" text-black">Price</mat-label>
+                <input formControlName="price" id="price" matInput class="col-md-10 text-dark" placeholder="Price" />
+                <mat-error *ngIf="Price?.invalid &&(Price?.dirty||Price?.touched)">
+                    <div *ngIf="Price?.errors?.['required']">Price is required</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <mat-label class=" text-black">Is Available</mat-label>
+                <input formControlName="isAvailable" id="isAvailable" type="checkbox" class="col-md-10 text-dark" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <mat-label class="text-black">Photo</mat-label>
+                <input formControlName="photo" (change)="upload($event)" id="photo" type="file" class="text-dark" placeholder="Photo" />
+                <mat-error *ngIf="(Photo?.dirty||Photo?.touched)" class="text-danger help-block">
+                    <div *ngIf="Photo?.errors?.['required']">Photo is required</div>
+                </mat-error>
+            </div>
+        </div>
+        
+        <div class="form-row mt-2">
+            <button type="submit" [disabled]="!addPropertyForm.valid" class="col-md-5 btn shadow-lg btn-primary">
+                Save
+            </button>
+            <input type="reset" value="Cancel" class="col-md-5 btn btn-warning shadow-lg offset-2" />
+        </div>
+    </form>
+</div>
